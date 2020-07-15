@@ -4,6 +4,9 @@
 function init(){
   
   scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2( 0x000000, 0.03);
+  
+  scene.background = new THREE.Color( 0x000000 );
   //scene.background = G.textures.cubemap;
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -24,7 +27,7 @@ function init(){
   objectControls = new ObjectControls( camera );
   
   renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setPixelRatio( 2 );
   renderer.setSize( window.innerWidth, window.innerHeight );
  
   document.body.appendChild( renderer.domElement );
@@ -119,13 +122,13 @@ function filterGodRays( inputTex, renderTarget, stepSize ) {
 
 function onWindowResize() {
 
-  var renderTargetWidth = window.innerWidth;
-  var renderTargetHeight = window.innerHeight;
+  var renderTargetWidth = window.innerWidth * 2;
+  var renderTargetHeight = window.innerHeight * 2;
 
   camera.aspect = renderTargetWidth / renderTargetHeight;
   camera.updateProjectionMatrix();
 
-  renderer.setSize( renderTargetWidth, renderTargetHeight );
+  renderer.setSize( renderTargetWidth/2, renderTargetHeight/2 );
   postprocessing.rtTextureColors.setSize( renderTargetWidth, renderTargetHeight );
   postprocessing.rtTextureDepth.setSize( renderTargetWidth, renderTargetHeight );
   postprocessing.rtTextureDepthMask.setSize( renderTargetWidth, renderTargetHeight );

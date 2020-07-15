@@ -187,25 +187,6 @@ Particles
 
 
 
-  stage.update = function() {
-    
-    for(var i = 0; i < this.numSliders; i++){
-      var name = "slider" + (i+1);
-      G.uniforms[name].value = G[name].value
-      this.loopedGains[name].gain.value = G[name].value
-    }
-
-
-
-
-    water.material.uniforms[ 'time' ].value += .1 / 60.0;
-
-    //this.granSynth.update();
-
-    this.looper.update();
-    
-  };
-
 
 
   sun = new THREE.Vector3(0,-1,0);
@@ -247,7 +228,7 @@ Particles
   }
 
 
-  var waterGeometry = new THREE.PlaneBufferGeometry( 150 , 150 );
+  var waterGeometry = new THREE.PlaneBufferGeometry( 150 , 150 , 100 , 100 );
 
   water = new Water(
     waterGeometry,
@@ -263,16 +244,49 @@ Particles
       sunDirection: new THREE.Vector3(0,-1,0),
       sunColor: 0xffffff,
       waterColor: 0xaaaaaa,
-      distortionScale: .1,
+      distortionScale: .3,
       fog: scene.fog !== undefined
     }
   );
-  water.material.uniforms[ 'size' ].value = 100;
+  water.material.uniforms[ 'size' ].value = 20;
+  water.material.uniforms[ 'speed' ].value = .7;
+  water.material.uniforms.time = G.uniforms.time;
   water.position.y = -2;
   water.rotation.x = - Math.PI / 2;
 
   updateSun();
   scene.add( water );
+
+
+
+var geo = new THREE.PlaneBufferGeometry(1,1);
+var mat = new THREE.MeshNormalMaterial();
+
+stage.lilypads = [];
+
+  for( var i = 0; i < 100; i++){
+    var m = new THREE.Mesh( geo, mat);
+    m.rotation.x = - Math.PI/2;
+    m.position.y = -2 + Math.random();
+    m.position.x = (Math.random() -.5) * 40;
+    m.position.z = (Math.random() -.5) * 40;
+
+    m.scale.multiplyScalar( Math.random()+1);
+    m.hoverOver = function(){
+      console.log( "WHSI" );
+    }
+
+    console.log( m.rotation );
+    m.update = function(){
+
+      m.rotation.x += (m.rotation.x + Math.PI/2) * .3;
+      
+    }
+
+    stage.lilypads.push(m);
+    objectControls.add(m);
+    scene.add(m);
+  }
 
 
   stage.start = function(){
@@ -286,6 +300,23 @@ Particles
   stage.start();
 
 
+
+  stage.update = function() {
+    
+    for(var i = 0; i < this.numSliders; i++){
+      var name = "slider" + (i+1);
+      G.uniforms[name].value = G[name].value
+      this.loopedGains[name].gain.value = G[name].value
+    }
+
+    water.material.uniforms[ 'time' ].value += .1 / 60.0;
+
+    //this.granSynth.update();
+    this.lilypads.forEach(element=> element.update() );//le
+
+    this.looper.update();
+    
+  };
 
 
 
