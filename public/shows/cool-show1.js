@@ -11,7 +11,7 @@ function MakeCoolShow1() {
 
 
   var treeMat = new THREE.MeshStandardMaterial({
-    color:0xffaaaa,
+    color:0xffeeaa,
     normalMap: G.uniforms.t_normal.value,
    // metalnessMap : G.textures.vertabraeMetallic,
     metalness:.2,
@@ -129,7 +129,7 @@ function MakeCoolShow1() {
  
 
 
-  light = new THREE.DirectionalLight(0xffaa44);
+  light = new THREE.DirectionalLight(0xffffff);
   light.intensity = 2;
   stage.add(light);
   light.position.copy( globePos );
@@ -172,7 +172,7 @@ function MakeCoolShow1() {
 Particles
 
 */
- var particlesMaterial = new THREE.ShaderMaterial({
+/* var particlesMaterial = new THREE.ShaderMaterial({
   vertexShader: G.shaders.vs.particles,
   fragmentShader: G.shaders.fs.particles,
   uniforms: G.uniforms,
@@ -185,7 +185,7 @@ Particles
  var particleSystem = new ParticleSystem(particlesMaterial);
  stage.add(particleSystem);
 
-
+*/
 
 
 
@@ -259,26 +259,58 @@ Particles
 
 
 
-var geo = new THREE.PlaneBufferGeometry(1,1);
-var mat = new THREE.MeshNormalMaterial();
+var geo = G.models.lilypad.geometry;// new THREE.PlaneBufferGeometry(1,1);
+var mat = new THREE.MeshNormalMaterial({side:THREE.DoubleSide});
+
+
+var baseMat = new THREE.MeshStandardMaterial({
+  color:0xaaffaa,
+ // normalMap: G.uniforms.t_normal.value,
+  metalness:1.2,
+  roughness:0,
+  envMap: G.textures.cubemap,
+  side: THREE.DoubleSide
+
+}) 
+
+
+var hoverMat = new THREE.MeshStandardMaterial({
+  color:0xffaaff,
+ // normalMap: G.uniforms.t_normal.value,
+  metalness:1.2,
+  roughness:0,
+  envMap: G.textures.cubemap,
+  side: THREE.DoubleSide
+
+
+}) 
+
 
 stage.lilypads = [];
 
   for( var i = 0; i < 100; i++){
-    var m = new THREE.Mesh( geo, mat);
-    m.rotation.x = - Math.PI/2;
-    m.position.y = -2 + Math.random();
-    m.position.x = (Math.random() -.5) * 40;
-    m.position.z = (Math.random() -.5) * 40;
+    var m = new THREE.Mesh( geo, baseMat);
+   m.rotation.x = - Math.PI;
+   m.rotation.y = Math.random() * 2 * Math.PI;
+    m.position.y = -1.9 +  .1*Math.random();
+    m.position.x = (Math.random() -.5) * 20;
+    m.position.z = (Math.random() -.5) * 20;
 
-    m.scale.multiplyScalar( Math.random()+1);
+    m.baseMat = baseMat;
+    m.hoverMat = hoverMat;
+
+    m.scale.multiplyScalar( Math.random() *.4+.2);
     m.hoverOver = function(){
-      console.log( "WHSI" );
+      this.material = this.hoverMat;
+    }
+    m.hoverOut = function(){
+      this.material = this.baseMat;
     }
 
-    console.log( m.rotation );
+    //console.log( m.rotation );
     m.update = function(){
 
+      m.rotation.x += (m.rotation.x + Math.PI/2) * .3;
       m.rotation.x += (m.rotation.x + Math.PI/2) * .3;
       
     }
@@ -286,6 +318,112 @@ stage.lilypads = [];
     stage.lilypads.push(m);
     objectControls.add(m);
     scene.add(m);
+  }
+
+
+
+
+
+  stage.dragonflys = [];
+
+
+
+  var geo = G.models.dragonflyBod.geometry;// new THREE.PlaneBufferGeometry(1,1);
+var mat = new THREE.MeshNormalMaterial({side:THREE.DoubleSide});
+
+
+var baseMat = new THREE.MeshStandardMaterial({
+  color:0xffeeaa,
+ // normalMap: G.uniforms.t_normal.value,
+  metalness:1.2,
+  roughness:0,
+  envMap: G.textures.cubemap,
+  side: THREE.DoubleSide
+
+}) 
+
+
+var hoverMat = new THREE.MeshStandardMaterial({
+  color:0xffaaff,
+  normalMap: G.uniforms.t_normal.value,
+  metalness:.2,
+  roughness:1,
+  envMap: G.textures.cubemap,
+  side: THREE.DoubleSide
+
+}) 
+
+
+stage.dragonflys = [];
+
+  for( var i = 0; i < 30; i++){
+    var m = new THREE.Mesh( geo, baseMat);
+    var mLeft = new THREE.Mesh(  G.models.dragonflyLeft.geometry, baseMat);
+    var mRight = new THREE.Mesh( G.models.dragonflyRight.geometry, baseMat);
+    m.idVal = i;
+   m.rotation.x = - Math.PI;
+   m.rotation.y = Math.random() * 2 * Math.PI;
+
+   m.basePosition = new Vector3();
+   m.basePosition.y =   5*Math.random();
+   m.basePosition.x = (Math.random() -.5) * 10;
+   m.basePosition.z = (Math.random() -.5) * 10;
+
+   m.leftWing = mLeft;
+   m.rightWing = mRight;
+
+
+   m.add(m.leftWing);
+   m.add(m.rightWing);
+    m.scale.multiplyScalar( Math.random() *.05+.03);
+    m.hoverOver = function(){
+      this.material = hoverMat;
+    }
+    m.hoverOut = function(){
+      this.material = baseMat;
+    }
+
+    m.oldPosition = new Vector3();
+
+    //console.log( m.rotation );
+    m.update = function(){
+
+      this.oldPosition.copy( this.position );
+      this.position.x = this.basePosition.x + Math.sin(G.time * 10 * ( .1 +.0013*i*.4) + this.idVal);// (m.rotation.x + Math.PI/2) * .3;
+      this.position.y = this.basePosition.y + Math.sin(G.time * 12 * ( .1 +.0013*i*.7) + 4*this.idVal);// (m.rotation.x + Math.PI/2) * .3;
+      this.position.z = this.basePosition.z + Math.sin(G.time * 11 * ( .1 +.0013*i*1) + 6*this.idVal);// (m.rotation.x + Math.PI/2) * .3;
+     
+     this.oldPosition.y = (this.oldPosition.y + this.position.y*2) /3;
+      this.lookAt( this.oldPosition );
+      this.rotation.y += Math.PI;
+
+
+      var a = Math.sin(G.time * 40 + this.idVal ) * .1;
+      this.leftWing.rotation.z = a;
+      this.rightWing.rotation.z = -a;
+    }
+
+    stage.dragonflys.push(m);
+    objectControls.add(m);
+    scene.add(m);
+  }
+
+
+
+
+  stage.lanterns = [];
+
+  for( var i = 0; i < 14; i ++){
+ var lantern = new Lantern();
+ lantern.mesh.scale.multiplyScalar( .05 + Math.random() * .1);
+ lantern.mesh.position.z = 3 + (Math.random() - .5) * 10;
+ lantern.mesh.position.y = 0+ (Math.random() - .5) * 4;;
+ lantern.mesh.position.x =  (Math.random() - .5) * 10;
+ lantern.basePosition = new T.Vector3();
+ lantern.basePosition.copy( lantern.mesh.position );
+ lantern.mesh.rotation.z = Math.random() -.5;
+ scene.add(lantern.mesh);
+ stage.lanterns[i] = lantern;
   }
 
 
@@ -313,6 +451,7 @@ stage.lilypads = [];
 
     //this.granSynth.update();
     this.lilypads.forEach(element=> element.update() );//le
+    this.dragonflys.forEach(element=> element.update() );//le
 
     this.looper.update();
     

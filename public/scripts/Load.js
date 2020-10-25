@@ -43,6 +43,9 @@ function LoadItAll(){
   G.shaders.load( 'vs-particles' , 'particles' , 'vertex');
   G.shaders.load( 'fs-particles' , 'particles' , 'fragment');
 
+  G.shaders.load( 'vs-lanternGlow' , 'lanternGlow' , 'vertex');
+  G.shaders.load( 'fs-lanternGlow' , 'lanternGlow' , 'fragment');
+
 
 
   loadTexture('https://cdn.glitch.com/795da756-4586-4b4b-82a3-eb1104560a1b%2Frough-aluminium.jpg?v=1586368300634',function(texture){
@@ -97,6 +100,34 @@ function LoadItAll(){
     G.models.face = model
   })
 
+
+  loadOBJ( "resources/dragonfly.obj", function(model){
+    console.log( model );
+    G.models.dragonfly = model
+  });
+
+
+  loadOBJ( "resources/dragonflyBod.obj", function(model){
+    console.log( model );
+    G.models.dragonflyBod = model
+  });
+
+  loadOBJ( "resources/dragonflyLeft.obj", function(model){
+    console.log( model );
+    G.models.dragonflyLeft = model
+  });
+
+  loadOBJ( "resources/dragonflyRight.obj", function(model){
+    console.log( model );
+    G.models.dragonflyRight = model
+  });
+
+  
+  loadOBJ( "resources/lilypad2.obj", function(model){
+    console.log( model );
+    G.models.lilypad = model
+  })
+
 }
 
 
@@ -111,14 +142,14 @@ function loadOBJ( file , callback ){
 
   neededToLoad += 1;
 
-  loader.load( file, function ( object ) {
+  objLoader.load( file, function ( object ) {
 
     object.traverse( function ( child ) {
 
       if ( child instanceof THREE.Mesh ) {
         callback(child);
       }else{
-        //console.log("NOPE");
+        console.log("NOPE");
       }
 
     });

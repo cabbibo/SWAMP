@@ -117,7 +117,7 @@ var Water = function ( geometry, options ) {
 
 			'void main() {',
 			'vec3 fPos = position;',
-			'fPos += vec3(0.,0., cos(time * 2. + position.x * 100. + position.y * 20.) * .1);',
+			//'fPos += vec3(0.,0., cos(time * 2. + position.x * 100. + position.y * 20.) * .1);',
 			'	mirrorCoord = modelMatrix * vec4(fPos, 1.0 );',
 			'	worldPosition = mirrorCoord.xyzw;',
 			'	mirrorCoord = textureMatrix * mirrorCoord;',
@@ -200,7 +200,7 @@ var Water = function ( geometry, options ) {
 			'	vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;',
 			'	vec3 albedo = mix( ( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(), ( vec3( 0.1 ) + reflectionSample * 0.9 + reflectionSample * specularLight ), reflectance);',
 			'	vec3 outgoingLight = albedo;',
-			'	gl_FragColor = vec4( outgoingLight, alpha );',
+			'	gl_FragColor = vec4( outgoingLight * vec3(1.3,1.6 ,1.), alpha );',
 
 			'#include <tonemapping_fragment>',
 			'#include <fog_fragment>',

@@ -31,8 +31,11 @@ function animate() {
     }
   }
 
+  
+
   G.dT = clock.getDelta();
   G.time += G.dT;
+  
 
   G.uniforms.time.value = G.time; //time.value;
   G.uniforms.dT.value = G.dT; //time.value;

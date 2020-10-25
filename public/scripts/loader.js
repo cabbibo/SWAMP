@@ -6,7 +6,7 @@ var manager = new THREE.LoadingManager();
 var neededToLoad = 0;
 var loaded = 0;
 
-var loader = new OBJLoader(manager);
+var objLoader = new OBJLoader(manager);
 var tLoader = new THREE.TextureLoader(manager);
 
 G.shaders = new ShaderLoader(pathToShaders, pathToChunks);
