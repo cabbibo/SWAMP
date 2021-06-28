@@ -377,9 +377,21 @@ stage.dragonflys = [];
    m.add(m.rightWing);
     m.scale.multiplyScalar( Math.random() *.05+.03);
     m.hoverOver = function(){
+      console.log("HOVER OVER");
       this.material = hoverMat;
     }
     m.hoverOut = function(){
+      console.log("HOVER OUT");
+      this.material = baseMat;
+    }
+
+
+    m.leftWing.hoverOver = function(){
+      console.log("HOVER OVER");
+      this.material = hoverMat;
+    }
+    m.rightWing.hoverOut = function(){
+      console.log("HOVER OUT");
       this.material = baseMat;
     }
 
@@ -405,6 +417,8 @@ stage.dragonflys = [];
 
     stage.dragonflys.push(m);
     objectControls.add(m);
+    objectControls.add(m.leftWing);
+    objectControls.add(m.rightWing);
     scene.add(m);
   }
 
@@ -414,16 +428,29 @@ stage.dragonflys = [];
   stage.lanterns = [];
 
   for( var i = 0; i < 14; i ++){
- var lantern = new Lantern();
- lantern.mesh.scale.multiplyScalar( .05 + Math.random() * .1);
- lantern.mesh.position.z = 3 + (Math.random() - .5) * 10;
- lantern.mesh.position.y = 0+ (Math.random() - .5) * 4;;
- lantern.mesh.position.x =  (Math.random() - .5) * 10;
- lantern.basePosition = new T.Vector3();
- lantern.basePosition.copy( lantern.mesh.position );
- lantern.mesh.rotation.z = Math.random() -.5;
- scene.add(lantern.mesh);
- stage.lanterns[i] = lantern;
+    var lantern = new Lantern();
+    lantern.mesh.scale.multiplyScalar( .05 + Math.random() * .1);
+    lantern.mesh.position.z = 3 + (Math.random() - .5) * 10;
+    lantern.mesh.position.y = 0+ (Math.random() - .5) * 4;;
+    lantern.mesh.position.x =  (Math.random() - .5) * 10;
+    lantern.mesh.hoverOut = function(){
+      console.log("HOVER OUT");
+      this.material = baseMat;
+    }
+
+    lantern.mesh.hoverOver = function(){
+      console.log("HOVER OUT");
+      this.material = hoverMat;
+    }
+
+
+    objectControls.add(lantern.mesh);
+
+    lantern.basePosition = new T.Vector3();
+    lantern.basePosition.copy( lantern.mesh.position );
+    lantern.mesh.rotation.z = Math.random() -.5;
+    scene.add(lantern.mesh);
+    stage.lanterns[i] = lantern;
   }
 
 
