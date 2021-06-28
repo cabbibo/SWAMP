@@ -23,7 +23,28 @@ function MakeCoolShow1() {
 
   
   
-
+  var baseMat = new THREE.MeshStandardMaterial({
+    color:0xaaffaa,
+   // normalMap: G.uniforms.t_normal.value,
+    metalness:1.2,
+    roughness:0,
+    envMap: G.textures.cubemap,
+    side: THREE.DoubleSide
+  
+  }) 
+  
+  
+  var hoverMat = new THREE.MeshStandardMaterial({
+    color:0xffaaff,
+   // normalMap: G.uniforms.t_normal.value,
+    metalness:1.2,
+    roughness:0,
+    envMap: G.textures.cubemap,
+    side: THREE.DoubleSide
+  
+  
+  }) 
+  
 
 
 
@@ -64,26 +85,38 @@ function MakeCoolShow1() {
   for( var i = 0; i < numTrees; i++ ){
 
 
-  var a =(i/numTrees) * 4 - 2;
+    var a =(i/numTrees) * 4 - 2;
 
-  if( Math.abs(a)< .4){
-    a += a * 6;
-  }
+    if( Math.abs(a)< .4){
+      a += a * 6;
+    }
 
-  var r = Math.random() * 20 + 10;
-
-
+    var r = Math.random() * 20 + 10;
 
 
-  tree = new Tree( params );
 
-  tree.position.x = Math.sin(a) * r;// (-Math.random()+.5) * 20;
-  tree.position.z = Math.cos(a) * -r;//-(Math.random() *40);
-  tree.position.y = 30;
-  tree.rotation.x = Math.PI;
- 
-  tree.scale.multiplyScalar((8));//(6/(Math.abs(a * 4)+.5)) * r/10 );
-  scene.add( tree );
+
+    tree = new Tree( params );
+
+    tree.position.x = Math.sin(a) * r;// (-Math.random()+.5) * 20;
+    tree.position.z = Math.cos(a) * -r;//-(Math.random() *40);
+    tree.position.y = 30;
+    tree.rotation.x = Math.PI;
+  
+    tree.scale.multiplyScalar((8));//(6/(Math.abs(a * 4)+.5)) * r/10 );
+    scene.add( tree );
+
+    tree.hoverOver = function(){
+
+      this.material = hoverMat;
+
+    }
+    
+    tree.hoverOut = function(){
+      this.material = baseMat;
+    }
+
+    objectControls.add(tree);
   }
 
   var treeMat = new THREE.MeshStandardMaterial({
@@ -125,6 +158,20 @@ function MakeCoolShow1() {
   tree.position.z = -3;//-(Math.random() *40);
   tree.position.y = -6;
   tree.scale.multiplyScalar(4);
+
+
+  tree.hoverOver = function(){
+
+    this.material = hoverMat;
+
+  }
+  
+  tree.hoverOut = function(){
+    this.material = baseMat;
+  }
+
+  objectControls.add(tree);
+  
   scene.add( tree );
  
 
@@ -263,27 +310,6 @@ var geo = G.models.lilypad.geometry;// new THREE.PlaneBufferGeometry(1,1);
 var mat = new THREE.MeshNormalMaterial({side:THREE.DoubleSide});
 
 
-var baseMat = new THREE.MeshStandardMaterial({
-  color:0xaaffaa,
- // normalMap: G.uniforms.t_normal.value,
-  metalness:1.2,
-  roughness:0,
-  envMap: G.textures.cubemap,
-  side: THREE.DoubleSide
-
-}) 
-
-
-var hoverMat = new THREE.MeshStandardMaterial({
-  color:0xffaaff,
- // normalMap: G.uniforms.t_normal.value,
-  metalness:1.2,
-  roughness:0,
-  envMap: G.textures.cubemap,
-  side: THREE.DoubleSide
-
-
-}) 
 
 
 stage.lilypads = [];
